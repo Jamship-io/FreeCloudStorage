@@ -24,6 +24,7 @@ export function CreatePost() {
       }}
       className="flex flex-col gap-2"
     >
+      <h1>hllo</h1>
       <input
         type="text"
         placeholder="Title"
