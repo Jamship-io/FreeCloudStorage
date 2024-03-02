@@ -11,7 +11,7 @@ import { splitter } from "../logic/splitter";
 //     const response = await axios.get("")
 // }
 
-function theLoop(filesArray: File[]) {
+async function theLoop(filesArray: File[]) {
     const chunkSize = 1024 * 1024;
     const size = filesArray[0]?.size;
     const nChunks = size && size / (1024 * 1024)  //1mb chunks
@@ -84,16 +84,16 @@ export default function UploadComponent() {
             // GOOD GOING 
             upload(files)
         }
-
-        return (
-            <main className="">
-                <h1 className="text-3xl my-5">Hello World :) </h1>
-                <div className="flex flex-row justify-center items-center">
-                    <input type="file" onChange={handleFile} multiple />
-                    <button className="bg-[#007bff] px-5 py-1 rounded-sm" onClick={handleClick}>
-                        Upload
-                    </button>
-                </div>
-            </main>
-        );
     }
+    return (
+        <main className="">
+            <h1 className="text-3xl my-5">Hello World :) </h1>
+            <div className="flex flex-row justify-center items-center">
+                <input type="file" onChange={handleFile} multiple />
+                <button className="bg-[#007bff] px-5 py-1 rounded-sm" onClick={handleClick}>
+                    Upload
+                </button>
+            </div>
+        </main>
+    );
+}
