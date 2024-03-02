@@ -14,17 +14,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+// model Post {
+//     id        Int      @id @default(autoincrement())
+//     name      String
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+//     createdBy   User   @relation(fields: [createdById], references: [id])
+//     createdById String
 
-    @@index([name])
-}
+//     @@index([name])
+// }
 
 // Necessary for Next auth
 model Account {
@@ -33,24 +33,16 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String?  @db.Text
-    access_token      String?  @db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String?  @db.Text
+    id_token          String? @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
-}
-
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -60,8 +52,44 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
+    folders       Folder[]
     sessions      Session[]
-    posts         Post[]
+}
+
+model Folder {
+    id           String   @id @default(cuid())
+    userId       String
+    user         User     @relation(fields: [userId], references: [id])
+    folder_name  String
+    total_size   Int
+    date_created DateTime
+    files        File[]
+}
+
+model File {
+    id       String   @id @default(cuid())
+    folderId String
+    folder   Folder   @relation(fields: [folderId], references: [id])
+    file_name  String
+    total_size Int
+    date       DateTime
+    chunks     Chunk[]
+}
+
+model Chunk {
+    id         String @id @default(cuid())
+    fileId     String
+    file       File   @relation(fields: [fileId], references: [id])
+    chunk_name String
+}
+
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

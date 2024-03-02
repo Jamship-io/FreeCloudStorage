@@ -10,8 +10,8 @@ const config = {
         return [
           {
             source: "/",
-            destination: "/api/upload",
-            permanent: true,
+            destination: "/upload",
+            permanent: false,
           },
         ];
       },
