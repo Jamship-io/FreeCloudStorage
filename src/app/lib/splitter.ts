@@ -18,10 +18,11 @@ export async function splitter(file: File | undefined, start: number, end: numbe
 
       if (arrayBuffer) {
         // Convert ArrayBuffer to Buffer
-        const buffer = arrayBuffer
+        // const buffer = arrayBuffer
+        const chunk = arrayBuffer.slice(start, end)
         // const buffer = Buffer.from(new Uint8Array(arrayBuffer));
 
-        resolve(buffer);
+        resolve(chunk);
       } else {
         resolve(undefined);
       }

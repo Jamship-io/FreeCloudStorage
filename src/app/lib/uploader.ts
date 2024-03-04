@@ -14,7 +14,7 @@ if (!API_TOKEN || !CHAT_ID) {
 
 const telegram = new Telegram(API_TOKEN!);
 
-export default async function uploader(data: ArrayBuffer): Promise<Buffer | undefined> {
+export default async function uploader(data: ArrayBuffer): Promise<object | undefined> {
   console.log('Uploading...');
   try {
     if (!API_TOKEN || !CHAT_ID) {
@@ -23,17 +23,22 @@ export default async function uploader(data: ArrayBuffer): Promise<Buffer | unde
     }
 
     const buffer = Buffer.from(data);
-    console.log("Data received in Uploader", buffer);
+    // console.log("Data received in Uploader", buffer);
 
     const readableStream = new Readable();
     readableStream.push(buffer);
     readableStream.push(null);
 
     await telegram.sendMessage(CHAT_ID, 'Hello World :)');
-    await telegram.sendDocument(CHAT_ID, { source: readableStream }, { caption: "abc.jpg" });
+    const botResponse = await telegram.sendDocument(CHAT_ID, { source: readableStream }, { caption: "StealStorage" });
+    console.log("botResponse ", botResponse)
+
+    // SAVE CHUNK METADATA TO DB HERE ----------
 
     console.log('Upload complete.');
-    return buffer;
+
+    return botResponse;
+
   } catch (error) {
     console.error('Error uploading:', error);
     return undefined;

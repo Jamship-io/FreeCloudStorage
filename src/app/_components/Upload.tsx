@@ -22,10 +22,10 @@ async function theLoop(filesArray: File[]): Promise<void> {
             const end = (chunk + 1) * chunkSize;
             console.log(nChunks)
 
-            if (nChunks <= 1) {
+            // if (nChunks <= 1) {
 
                 const splitted = await splitter(filesArray[0], start, end);
-                console.log("splitresponse", splitted)
+                // console.log("splitresponse", splitted)
 
                 if (splitted !== undefined) {
                     console.log("Split done waiting for upload")
@@ -33,32 +33,44 @@ async function theLoop(filesArray: File[]): Promise<void> {
 
                     // DO NOT TOUCH HIGHLY UNSTABLE
 
-                    const returnVal: AxiosResponse = await axios.post("/api/upload", splitted, { responseType: "arraybuffer" });
-                    const originalArrBuffer: ArrayBuffer = returnVal.data as ArrayBuffer;
+                    // const returnVal = await axios.post("/api/upload", splitted, { responseType: "arraybuffer" });
+                    const returnVal = await axios.post("/api/upload", splitted, { responseType: "json" });
+                    console.log(returnVal)
+                    // const originalArrBuffer: ArrayBuffer = returnVal.data[0] as ArrayBuffer;
+                    // console.log(botResponse)
                     
 
                     
-                    console.log("API Response - ", returnVal)
-                    console.log("Converted to Original - ", originalArrBuffer)
-                    const blob = new Blob([originalArrBuffer])
-                    saveAs(blob, filesArray[0]?.name)
+                    console.log("API Response - ", returnVal.data)
+                    // console.log("Converted to Original - ", originalArrBuffer)
+
+                    // const blob = new Blob([originalArrBuffer])
+                    // saveAs(blob, filesArray[0]?.name)
 
                     console.log(`Chunk with i ${chunk} && start ${start} && end ${end}\n `);
                 } else {
                     console.error(`Failed to split chunk ${chunk}`);
                 }
-            }
+            // }
         }
     }
 }
 
 
 async function upload(files: FileList) {
+    console.log(files)
     const filesArray = Array.from(files);
 
     //for single file - 
 
     if (filesArray.length === 1) {
+        // SAVE THE METADATA OF THE FILE HERE ...
+        const file = filesArray[0]
+        const metadata = {
+            name: file?.name,
+            size: file?.size,
+            type: file?.type
+        }
         await theLoop(filesArray);
         // SAVE THE DATA HERE TO THE DB
         // const encrypter;
