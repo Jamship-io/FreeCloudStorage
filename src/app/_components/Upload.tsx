@@ -1,55 +1,63 @@
 "use client";
-import axios from "axios";
+
+import { ChangeEvent, useState } from 'react';
+import axios from 'axios';
+import { splitter } from '../lib/splitter';
+import uploader from '../lib/uploader';
 import { saveAs } from 'file-saver';
-// src/app/page.tsx
-import redirect from 'next/app';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { splitter } from "../logic/splitter";
 
-// async function useFetch(){
-//     const [data, setData] = useState(null);
-//     const response = await axios.get("")
-// }
 
-async function theLoop(filesArray: File[]) {
+async function theLoop(filesArray: File[]): Promise<void> {
+
     const chunkSize = 1024 * 1024;
     const size = filesArray[0]?.size;
-    const nChunks = size && size / (1024 * 1024)  //1mb chunks
+    const nChunks = size && size / chunkSize; // 1mb chunks
 
-
-    console.log(`Size ${size} && nChunks ${nChunks}`)
-    // console.log(files)
+    console.log(`Size ${size} && nChunks ${nChunks}`);
 
     if (size && nChunks) {
-        // const splitted = await split(filesArray[0])
+
         for (let chunk = 0; chunk < nChunks; chunk++) {
 
             const start = chunk * chunkSize;
-            const end = (chunk + 1) * chunkSize
+            const end = (chunk + 1) * chunkSize;
+            console.log(nChunks)
 
-            const splitted = await splitter(filesArray[0], start, end)
-            const blob = new Blob([splitted])
-            // const blob = new Blob([splitted]);
-            saveAs(blob, filesArray[0]?.name)
+            if (nChunks <= 1) {
 
-            // const buffer = Buffer.from(splitted)
-            console.log(`Chunk with i ${chunk} && start ${start} && end ${end}\n `, blob)
+                const splitted = await splitter(filesArray[0], start, end);
+                console.log("splitresponse", splitted)
 
+                if (splitted !== undefined) {
+                    console.log("Split done waiting for upload")
+                    // // @ts-ignore
+
+                    // DO NOT TOUCH HIGHLY UNSTABLE
+
+                    const returnVal = await axios.post("/api/upload", splitted, {responseType : "arraybuffer"})
+                    const originalArrBuffer = returnVal.data
+
+                    
+                    console.log("API Response - ", returnVal)
+                    console.log("Converted to Original - ", originalArrBuffer)
+                    const blob = new Blob([originalArrBuffer])
+                    saveAs(blob, filesArray[0]?.name)
+
+                    console.log(`Chunk with i ${chunk} && start ${start} && end ${end}\n `);
+                } else {
+                    console.error(`Failed to split chunk ${chunk}`);
+                }
+            }
         }
     }
 }
 
-// async function getSplit(file: File){
-//     const splitted = await split(file)
-//     console.log(splitted)
-//     return splitted;
-// }
 
 function upload(files: FileList) {
     const filesArray = Array.from(files) as File[];
 
-    console.log(filesArray[0]?.size)
     //for single file - 
+
     if (filesArray.length === 1) {
         theLoop(filesArray);
         // SAVE THE DATA HERE TO THE DB
@@ -59,9 +67,6 @@ function upload(files: FileList) {
         filesArray.forEach(file => {
             // handle if there are more than one files
             console.log("more than one files")
-            // const splitted = split(file)
-            // const blob = new Blob([chunk]);
-            // saveAs(blob, filesArray[0]?.name)
         });
     }
 
@@ -70,8 +75,6 @@ function upload(files: FileList) {
 
 export default function UploadComponent() {
     const [files, setFiles] = useState<FileList | null>();
-    // const resp = await useFetch();
-    // console.log("resp", resp)
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         setFiles(e.target?.files)
     }
@@ -89,7 +92,7 @@ export default function UploadComponent() {
         <main className="">
             <h1 className="text-3xl my-5">Hello World :) </h1>
             <div className="flex flex-row justify-center items-center">
-                <input type="file" onChange={handleFile} multiple />
+                <input type="file" onChange={handleFile} />
                 <button className="bg-[#007bff] px-5 py-1 rounded-sm" onClick={handleClick}>
                     Upload
                 </button>
