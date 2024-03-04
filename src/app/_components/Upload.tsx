@@ -53,13 +53,13 @@ async function theLoop(filesArray: File[]): Promise<void> {
 }
 
 
-function upload(files: FileList) {
+async function upload(files: FileList) {
     const filesArray = Array.from(files) as File[];
 
     //for single file - 
 
     if (filesArray.length === 1) {
-        theLoop(filesArray);
+        await theLoop(filesArray);
         // SAVE THE DATA HERE TO THE DB
         // const encrypter;
     }

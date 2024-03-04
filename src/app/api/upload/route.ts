@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import uploader from "~/app/lib/uploader";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export async function POST(req: NextRequest, res: NextResponse) {
   console.log("inside post req")
@@ -17,6 +17,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return new Response(uploadResp)
 }
 
-
+// export { config } from 'next';
 
 
