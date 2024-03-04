@@ -3,21 +3,25 @@ import { Telegram } from 'telegraf';
 import { Readable } from 'stream';
 import { config } from 'dotenv';
 
-config(); 
+config();
 
-const API_TOKEN = process.env.API_TOKEN as string;
-const CHAT_ID = process.env.CHAT_ID as string;
+const API_TOKEN = process.env.API_TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
 
 if (!API_TOKEN || !CHAT_ID) {
-  console.error('Missing API_TOKEN or CHAT_ID in the environment variables.');
+  console.error('API_TOKEN or CHAT_ID is null or undefined.');
 }
 
-const telegram = new Telegram(API_TOKEN);
+const telegram = new Telegram(API_TOKEN!);
 
 export default async function uploader(data: ArrayBuffer): Promise<Buffer | undefined> {
   console.log('Uploading...');
-
   try {
+    if (!API_TOKEN || !CHAT_ID) {
+      console.error('API_TOKEN or CHAT_ID is null or undefined.');
+      return undefined;
+    }
+
     const buffer = Buffer.from(data);
     console.log("Data received in Uploader", buffer);
 
@@ -32,5 +36,6 @@ export default async function uploader(data: ArrayBuffer): Promise<Buffer | unde
     return buffer;
   } catch (error) {
     console.error('Error uploading:', error);
+    return undefined;
   }
 }

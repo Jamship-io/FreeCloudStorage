@@ -1,9 +1,8 @@
 "use client";
 
 import { ChangeEvent, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { splitter } from '../lib/splitter';
-import uploader from '../lib/uploader';
 import { saveAs } from 'file-saver';
 
 
@@ -30,12 +29,13 @@ async function theLoop(filesArray: File[]): Promise<void> {
 
                 if (splitted !== undefined) {
                     console.log("Split done waiting for upload")
-                    // // @ts-ignore
+
 
                     // DO NOT TOUCH HIGHLY UNSTABLE
 
-                    const returnVal = await axios.post("/api/upload", splitted, {responseType : "arraybuffer"})
-                    const originalArrBuffer = returnVal.data
+                    const returnVal: AxiosResponse = await axios.post("/api/upload", splitted, { responseType: "arraybuffer" });
+                    const originalArrBuffer: ArrayBuffer = returnVal.data as ArrayBuffer;
+                    
 
                     
                     console.log("API Response - ", returnVal)
@@ -54,7 +54,7 @@ async function theLoop(filesArray: File[]): Promise<void> {
 
 
 async function upload(files: FileList) {
-    const filesArray = Array.from(files) as File[];
+    const filesArray = Array.from(files);
 
     //for single file - 
 
@@ -85,7 +85,7 @@ export default function UploadComponent() {
             // THIS WORKS ALL GOOD, ONLY THE SPLITTER DOESNT WANT TO SPLIT THE FILE AS IT IS Uint8Array
             // NEED TO CONVERT IT TO BUFFER TO SLICE IT
             // GOOD GOING 
-            upload(files)
+            await upload(files)
         }
     }
     return (
