@@ -6,15 +6,15 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    async redirects() {
-        return [
-          {
-            source: "/",
-            destination: "/upload",
-            permanent: false,
-          },
-        ];
-      },
+    // async redirects() {
+    //     return [
+    //       {
+    //         source: "/",
+    //         destination: "/",
+    //         permanent: false,
+    //       },
+    //     ];
+    //   },
 };
 
 export default config;

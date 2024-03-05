@@ -2,9 +2,15 @@
 
 import { ChangeEvent, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { splitter } from '../lib/splitter';
+import { splitter } from '../../lib/splitter';
 import { saveAs } from 'file-saver';
-
+import { api } from '~/trpc/react';
+import { randomUUID } from 'crypto';
+import { date } from 'zod';
+import Session  from 'next-auth';
+import { useSession } from "next-auth/react";
+import { authOptions } from '~/server/auth';
+import { redirect } from 'next/navigation';
 
 async function theLoop(filesArray: File[]): Promise<void> {
 
@@ -35,13 +41,13 @@ async function theLoop(filesArray: File[]): Promise<void> {
 
                     // const returnVal = await axios.post("/api/upload", splitted, { responseType: "arraybuffer" });
                     const returnVal = await axios.post("/api/upload", splitted, { responseType: "json" });
-                    console.log(returnVal)
+                    // console.log(returnVal)
                     // const originalArrBuffer: ArrayBuffer = returnVal.data[0] as ArrayBuffer;
                     // console.log(botResponse)
                     
 
                     
-                    console.log("API Response - ", returnVal.data)
+                    // console.log("API Response - ", returnVal.data)
                     // console.log("Converted to Original - ", originalArrBuffer)
 
                     // const blob = new Blob([originalArrBuffer])
@@ -57,23 +63,16 @@ async function theLoop(filesArray: File[]): Promise<void> {
 }
 
 
-async function upload(files: FileList) {
+async function upload(files: FileList, userId: string | undefined) {
+    // console.log("user id ", userId)
     console.log(files)
     const filesArray = Array.from(files);
 
     //for single file - 
 
     if (filesArray.length === 1) {
-        // SAVE THE METADATA OF THE FILE HERE ...
-        const file = filesArray[0]
-        const metadata = {
-            name: file?.name,
-            size: file?.size,
-            type: file?.type
-        }
+        // SAVE THE METADATA OF THE FILE HERE ...        
         await theLoop(filesArray);
-        // SAVE THE DATA HERE TO THE DB
-        // const encrypter;
     }
     else {
         filesArray.forEach(file => {
@@ -85,19 +84,59 @@ async function upload(files: FileList) {
 
 }
 
+type MetadataType = {
+    file_name: string;
+    file_size: number;
+    file_type: string;
+    date: Date
+    userId: string;
+};
+
+// async function useSavetoDB( metadata: MetadataType ) {
+//     const createFile =  api.file.createFile.useMutation()
+//     createFile.mutate(metadata)
+// }
+
 export default function UploadComponent() {
+
+    const session = useSession();
+
+    const createFile =  api.file.createFile.useMutation()
+
+
+
+
+    // console.log("Session - ", session?.data?.user)
+
     const [files, setFiles] = useState<FileList | null>();
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         setFiles(e.target?.files)
     }
 
+    const ctx = api.useContext();
+
     async function handleClick() {
         if (files) {
-
-            // THIS WORKS ALL GOOD, ONLY THE SPLITTER DOESNT WANT TO SPLIT THE FILE AS IT IS Uint8Array
-            // NEED TO CONVERT IT TO BUFFER TO SLICE IT
-            // GOOD GOING 
-            await upload(files)
+            const userId = session?.data?.user.id
+            await upload(files, userId)
+            const file = files[0]
+            const metadata = {
+                file_name: file?.name.toString() ?? '',
+                file_type: file?.type ?? '',
+                file_size: file?.size ?? 0,
+                userId: userId ?? '' ,
+                date: new Date(),
+            }
+            // await useSavetoDB(metadata)
+            createFile.mutate(metadata, {
+                onSuccess: () => {
+                //   console.log('Mutation succeeded. Invalidate and refetch.');
+                  void ctx.file.getAllFiles.invalidate(); // tried to refetch the data, didnt work
+                //   redirect("/upload")
+                },
+              });
+            
+            // THIS WORKS BUT THIS SHOULD RUN ONCE THE UPLOAD IS COMPLETE
         }
     }
     return (

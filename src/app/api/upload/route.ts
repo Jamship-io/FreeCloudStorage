@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import uploader from "~/app/lib/uploader";
+import uploader from "../../../lib/uploader";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   console.log("inside post req")

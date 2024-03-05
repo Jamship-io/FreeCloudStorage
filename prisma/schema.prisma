@@ -45,6 +45,8 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+// NEED TO CHANGE PRISMA = NEW PRIMSA
+
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -52,35 +54,39 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    folders       Folder[]
+    // folders       Folder[]
+    files         File[]
     sessions      Session[]
 }
 
-model Folder {
-    id           String   @id @default(cuid())
-    userId       String
-    user         User     @relation(fields: [userId], references: [id])
-    folder_name  String
-    total_size   Int
-    date_created DateTime
-    files        File[]
-}
+// model Folder {
+//     id           String   @id @default(cuid())
+//     userId       String
+//     user         User     @relation(fields: [userId], references: [id])
+//     folder_name  String
+//     total_size   Int
+//     date_created DateTime
+//     files        File[]
+// }
 
 model File {
-    id       String   @id @default(cuid())
-    folderId String
-    folder   Folder   @relation(fields: [folderId], references: [id])
-    file_name  String
-    total_size Int
-    date       DateTime
-    chunks     Chunk[]
+  id        String   @id @default(cuid())
+  file_name String
+  file_size Int
+  file_type String
+  date      DateTime? @default(now())
+  chunks    Chunk[]  @relation("FileToChunks")
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 model Chunk {
-    id         String @id @default(cuid())
-    fileId     String
-    file       File   @relation(fields: [fileId], references: [id])
-    chunk_name String
+  id         String @id @default(cuid())
+  file_id     String
+  file       File   @relation("FileToChunks", fields: [file_id], references: [id])
+  chunk_name String
+  chunk_size Int
+  message_id String
 }
 
 
@@ -99,3 +105,4 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+

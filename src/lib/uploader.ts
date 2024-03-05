@@ -29,7 +29,7 @@ export default async function uploader(data: ArrayBuffer): Promise<object | unde
     readableStream.push(buffer);
     readableStream.push(null);
 
-    await telegram.sendMessage(CHAT_ID, 'Hello World :)');
+    // await telegram.sendMessage(CHAT_ID, 'Hello World :)');
     const botResponse = await telegram.sendDocument(CHAT_ID, { source: readableStream }, { caption: "StealStorage" });
     console.log("botResponse ", botResponse)
 
