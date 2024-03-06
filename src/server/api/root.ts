@@ -9,9 +9,6 @@ import { fileRouter } from "./routers/file";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  getGreeted: publicProcedure.query(async ()=>{
-    return "Hello World :)"
-  }),
   file: fileRouter
   // chunk: chunkRouter
 });

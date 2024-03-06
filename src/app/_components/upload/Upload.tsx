@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { splitter } from '../../lib/splitter';
+import { splitter } from '~/lib/splitter';
 import { saveAs } from 'file-saver';
 import { api } from '~/trpc/react';
 import { randomUUID } from 'crypto';
@@ -100,11 +100,9 @@ type MetadataType = {
 export default function UploadComponent() {
 
     const session = useSession();
+    console.log("session", session)
 
     const createFile =  api.file.createFile.useMutation()
-
-
-
 
     // console.log("Session - ", session?.data?.user)
 
@@ -113,7 +111,7 @@ export default function UploadComponent() {
         setFiles(e.target?.files)
     }
 
-    const ctx = api.useContext();
+    // const ctx = api.useContext();
 
     async function handleClick() {
         if (files) {
@@ -132,7 +130,7 @@ export default function UploadComponent() {
             createFile.mutate(metadata, {
                 onSuccess: () => {
                 //   console.log('Mutation succeeded. Invalidate and refetch.');
-                  void ctx.file.getAllFiles.invalidate(); // tried to refetch the data, didnt work
+                //   void ctx.file.getAllFiles.invalidate(); // tried to refetch the data, didnt work
                 //   redirect("/upload")
                 },
               });

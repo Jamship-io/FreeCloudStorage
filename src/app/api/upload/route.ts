@@ -10,6 +10,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const uploadResp = await uploader(data);
     return new Response(JSON.stringify(uploadResp))
 }
-
-
-
