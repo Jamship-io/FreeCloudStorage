@@ -5,6 +5,8 @@ import Signin from '../auth/Signin';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '~/server/auth';
 
 
 export default function HomeComponent({files}: {
@@ -19,20 +21,21 @@ export default function HomeComponent({files}: {
     }[]
 }) {
 
-    // const session = await getServerSession(authOptions); // add the auth options for it to work, thankyou github
-    // console.log(session?.user);
+    // // const session = await getServerSession(authOptions); // add the auth options for it to work, thankyou github
+    // // console.log(session?.user);
     const router = useRouter()
-    const session = useSession();
+    // const session = useSession();
+    // console.log(session)
 
 
-    if (!session || !session?.data?.user) {
-        return (
-            <div>
-                <div>Not logged in</div>
-                <Signin></Signin>
-            </div>
-        );
-    }
+    // if (!session || !session?.data?.user) {
+    //     return (
+    //         <div>
+    //             <div>Not logged in</div>
+    //             <Signin></Signin>
+    //         </div>
+    //     );
+    // }
 
     function handleClick(file_id: NavigateOptions){
         const url = "/file/" + String(file_id);
