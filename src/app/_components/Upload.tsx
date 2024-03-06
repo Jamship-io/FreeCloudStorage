@@ -127,6 +127,7 @@ export default function UploadComponent() {
                 userId: userId ?? '' ,
                 date: new Date(),
             }
+            console.log(userId)
             // await useSavetoDB(metadata)
             createFile.mutate(metadata, {
                 onSuccess: () => {
