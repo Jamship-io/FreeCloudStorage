@@ -3,33 +3,21 @@
 import { Telegram } from 'telegraf';
 import { Readable } from 'stream';
 import { config } from 'dotenv';
-import { api } from '~/trpc/server';
 
 config();
 
-console.log("isndie uplaod")
 
 const API_TOKEN = process.env.API_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
-// if (!API_TOKEN || !CHAT_ID) {
-//   console.error('API_TOKEN or CHAT_ID not found :(');
-// }
-
-const telegram = new Telegram(API_TOKEN!);
-
-// type uploadData = {
-//   chunk : ArrayBuffer,
-//   metadata: object
-// }
+const bot = new Telegram(API_TOKEN!);
 
 export default async function uploader(data: ArrayBuffer): Promise<object | undefined> {
-  // const {chunk, metadata} = data;
-  const chunk = data;
   console.log('Uploading...');
+  const chunk = data;
   try {
     if (!API_TOKEN || !CHAT_ID) {
-      console.error('API_TOKEN or CHAT_ID is null .');
+      console.error('API_TOKEN or CHAT_ID is null');
       return undefined;
     }
 
@@ -39,10 +27,8 @@ export default async function uploader(data: ArrayBuffer): Promise<object | unde
     readableStream.push(buffer);
     readableStream.push(null);
 
-    const botResponse = await telegram.sendDocument(CHAT_ID, { source: readableStream }, { caption: "StealStorage" });
+    const botResponse = await bot.sendDocument(CHAT_ID, { source: readableStream }, { caption: "StealStorage" });
     console.log("BOT Resp -  ", botResponse)
-
-    // SAVE CHUNK METADATA TO DB HERE ----------
 
     console.log('Upload complete.');
 
@@ -53,3 +39,4 @@ export default async function uploader(data: ArrayBuffer): Promise<object | unde
     return undefined;
   }
 }
+

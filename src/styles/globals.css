@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+    font-family: 'Yoshida Bold';
+    src: url('/fonts/Fontspring-DEMO-yoshidasans-bold.woff2') format('woff2'),
+    url('/fonts/Fontspring-DEMO-yoshidasans-bold.woff') format('woff'),
+    url('/fonts/Fontspring-DEMO-yoshidasans-bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Yoshida Regular';
+    src: url('/public/fonts/Fontspring-DEMO-yoshidasans-regular.otf') format("opentype");
+    src: url('/public/fonts/Fontspring-DEMO-yoshidasans-regular.woff') format("woff");
+    src: url('/public/fonts/Fontspring-DEMO-yoshidasans-regular.wooff2') format("woff2");
+    font-weight: 400;
+}
+
+body{
+    background-color: white;
+}

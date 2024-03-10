@@ -26,7 +26,8 @@ export default async function RootLayout({
   // const session = await getSession()
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white`}>
+      <body className={`font-sans ${inter.variable} flex min-h-screen flex-col items-center justify-center text-white bg-[#18181B]`}>
+      {/* <body className={`font-sans ${inter.variable} flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white`}> */}
         <TRPCReactProvider>
           <SessionProvider>
             {children}

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Signin from '../auth/Signin';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+// import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '~/server/auth';
 import UploadButton from './_upload/UploadModal';
@@ -24,40 +24,68 @@ export default function HomeComponent({ files }: {
         date: Date | null;
     }[]
 }) {
-
-
-    const [isUploadClicked, setIsUploadClicked] = useState(false)
-    // // const session = await getServerSession(authOptions); // add the auth options for it to work, thankyou github
-    const router = useRouter()
-
+    const [isUploadClicked, setIsUploadClicked] = useState(false);
+    const router = useRouter();
 
     if (isUploadClicked) {
-        console.log("CLIKC")
+        console.log("CLICK");
         // await THELOOP()
     }
 
-    function handleClick(file_id: NavigateOptions) {
-        const url = "/file/" + String(file_id);
-        router.push(url);
-
-    }
-
-
+    // function handleClick(file_id: string) {
+    //     const url = "/file/" + String(file_id);
+    //     router.push(url);
+    // }
 
     return (
-        <div className='flex flex-col w-full min-h-screen justify-center items-center'>
-            <nav className='flex justify-between px-10 pt-5 w-full'>
-                Home
+        <div className='flex w-full min-h-screen justify-center'>
+            <nav className='fixed flex justify-between items-center px-10 py-4 w-full bg-[#1D1C26] font-yoshida'>
+                Steal Storage
                 <UploadModal setIsUploadClicked={setIsUploadClicked}></UploadModal>
             </nav>
-            <div className='w-[60%] flex items-center justify-center flex-col bg-white'>
+            <div className='w-[60%] flex flex-col bg-[#1D1C26] self-start mt-28 h-screen'>
+                <div className="flex items-center justify-between p-2 text-xl">
+
+                    <div className="w-72 flex items-center justify-center">
+                        <h1 className='mx-2 truncate '>File Name</h1>
+                    </div>
+
+                    <div className="w-36 flex items-center justify-center">
+                        <h1 className="mx-2">Date Created</h1>
+
+                    </div>
+
+                    <div className="w-36 flex items-center justify-center">
+                        <h1 className="mx-2">Size</h1>
+
+                    </div>
+
+                </div>
                 {files?.map((file, index) => (
-                    // <button key={index} onClick={() => { handleClick(file.id as NavigateOptions) }} className='bg-black m-1 p-1 rounded-md'>{file?.file_name}</button  >
-                    <FileCollapse key={index} filename={file.file_name} size={file.file_size}></FileCollapse>
+                    <FileCollapse
+                        key={index}
+                        filename={file.file_name}
+                        size={file.file_size}
+                        date={dateFormatter(file.date)}
+                    // onClick={handleClick(file.id)}
+                    ></FileCollapse>
                 ))}
             </div>
         </div>
-
     );
 }
 
+
+
+function dateFormatter(date: Date | null) {
+    if (!date) return "";
+
+    const timeinMillis = date.getTime();
+    const DateFromDate = new Date(timeinMillis);
+    const day = DateFromDate.getDate();
+    const month = DateFromDate.getMonth() + 1;
+    const year = DateFromDate.getFullYear();
+
+    const fullDate = day + "-" + month + "-" + year;
+    return fullDate;
+}

@@ -7,6 +7,9 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        'yoshida': ["Yoshida Bold", "sans-serif"],
+        'yoshidaR': ["Yoshida Regular", "sans-serif"],
+        'giest': ["giest", "sans-serif"],
       },
     },
   },
