@@ -6,6 +6,7 @@ import {
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import DiscordProvider from "next-auth/providers/discord";
+import { signIn } from "next-auth/react";
 
 import { env } from "~/env";
 import { db } from "~/server/db";

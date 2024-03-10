@@ -1,21 +1,15 @@
 
-import { getServerSession } from "next-auth";
-import UploadComponent from "~/app/_components/upload/Upload";
-import { authOptions } from "~/server/auth";
-// import { api } from "~/trpc/server";
+// import { getServerSession } from "next-auth";
+// import { NextRequest, NextResponse } from "next/server";
+// import UploadComponent from "~/app/_components/upload/Upload";
+// import { authOptions } from "~/server/auth";
+// // import { api } from "~/trpc/server";
 
 const Main = async () => {
-  const session = await getServerSession(authOptions);
-  // const files = await api.file.getAllFiles.query()
-  if (!session || !session?.user) {
-    return (
-        <div>
-            <div>Not logged in</div>
-        </div>
-    );
-}
+
   return(
-    <UploadComponent></UploadComponent>
+    // <UploadComponent></UploadComponent>
+    <h1>Hello World :)</h1>
   )
 };
 

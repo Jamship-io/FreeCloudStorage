@@ -70,25 +70,25 @@ model User {
 // }
 
 model File {
-  id        String   @id @default(cuid())
-  file_name String
-  file_size Int
-  file_type String
-  date      DateTime? @default(now())
-  chunks    Chunk[]  @relation("FileToChunks")
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+    id        String    @id @default(cuid())
+    file_name String
+    file_size Int
+    file_type String
+    date      DateTime? @default(now())
+    chunks    Chunk[] 
+    User      User      @relation(fields: [userId], references: [id])
+    userId    String
 }
 
 model Chunk {
-  id         String @id @default(cuid())
-  file_id     String
-  file       File   @relation("FileToChunks", fields: [file_id], references: [id])
-  chunk_name String
-  chunk_size Int
-  message_id String
+    id             String    @id @default(cuid())
+    chunk_id       String
+    parent_file_id String
+    file           File      @relation(fields: [parent_file_id], references: [id])
+    chunk_name     String
+    chunk_size     Int
+    timestamp      DateTime? @default(now())
 }
-
 
 model Session {
     id           String   @id @default(cuid())
@@ -105,4 +105,3 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
-

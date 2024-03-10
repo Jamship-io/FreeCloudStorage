@@ -9,7 +9,7 @@ export default async function ViewFile({ file }: {
         file_size: number;
         file_type: string;
         date: Date | null;
-        userId: string | null;
+        // userId: string | null;
     }
 }) {
     const size = ((file?.file_size) / (1024 * 1024)).toFixed(3)

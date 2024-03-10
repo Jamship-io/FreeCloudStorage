@@ -1,29 +1,27 @@
-import { z } from "zod";
+import { Prisma } from "@prisma/client";
+import { connect } from "http2";
+import { string, z } from "zod";
 import {
     createTRPCRouter,
     protectedProcedure,
     publicProcedure,
 } from "~/server/api/trpc";
-// import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
+type createChunkType = {
+    timestamp: Date;
+    file: {
+        connect: {
+            id: string | undefined;
+        };
+    };
+    parent_file_id: string;
+    chunk_name: string;
+    file_id: string;
+    chunk_size: number;
+};
+
 
 export const fileRouter = createTRPCRouter({
-
-  getGreeted: publicProcedure.query(async ()=>{
-    return "Hello World :)"
-  }),
-
-  // model File {
-  //   id        String   @id @default(cuid())
-  //   file_name String
-  //   file_size Int
-  //   file_type String
-  //   date      DateTime
-  //   chunks    Chunk[]  @relation("FileToChunks")
-  //   User      User?    @relation(fields: [userId], references: [id])
-  //   userId    String?
-  // }
 
     createFile: protectedProcedure
         .input(z.object({
@@ -38,17 +36,52 @@ export const fileRouter = createTRPCRouter({
         .mutation(async ({ ctx, input }) => {
             const file = await ctx.db.file.create({
                 data: {
-                    // id: input.id,
                     file_name: input.file_name,
                     file_size: input.file_size,
                     file_type: input.file_type,
+                    date: input.date,
                     userId: input.userId,
-                    date: input.date
+                }
+            });
+            return file;
+        }),
+        
+
+    createChunk: protectedProcedure
+        .input(z.object({
+            parent_file_id: z.string(),
+            chunk_name: z.string(),
+            // file_id: z.string(),
+            chunk_size: z.number(),
+            timeStamp: z.date(),
+            chunk_id: z.string().min(1)
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const chunk = await ctx.db.chunk.create({
+                data: {
+                    timestamp: input.timeStamp,
+                    chunk_id: input.chunk_id,
+                    // file: {
+                    //     connect: {
+                    //         id: input.file_id
+                    //     }
+                    // },
+                    parent_file_id: input.parent_file_id,
+                    chunk_name: input.chunk_name,
+                    // file_id: input.file_id as any,
+                    chunk_size: input.chunk_size,
+                    // // timestamp: input.timeStamp
                 },
             });
 
-            return file;
+
+
+            return chunk;
         }),
+
+
+
+
 
     getFileById: protectedProcedure
         .input(z.string())
@@ -65,11 +98,26 @@ export const fileRouter = createTRPCRouter({
             return file;
         }),
 
-    getAllFiles: protectedProcedure
-        .query(async ({ ctx }) => {
-            const files = await ctx.db.file.findMany();
-            return files;
+        getAllFiles: protectedProcedure
+        .input(z.object({
+            userId: z.string()
+        }))
+        .query(async ({ ctx, input }) => {
+          const userId = input?.userId;
+      
+          if (!userId) {
+            throw new Error('User ID is required.');
+          }
+      
+          const files = await ctx.db.file.findMany({
+            where: {
+              userId: userId,
+            },
+          });
+      
+          return files;
         }),
+      
 
     getChunksByFileId: protectedProcedure
         .input(z.string())

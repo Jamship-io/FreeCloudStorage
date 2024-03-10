@@ -1,4 +1,5 @@
 import { Buffer } from "buffer";
+import { api } from "~/trpc/server";
 
 export async function splitter(file: File | undefined, start: number, end: number): Promise<ArrayBuffer | undefined> {
   if (!file) {
@@ -6,6 +7,7 @@ export async function splitter(file: File | undefined, start: number, end: numbe
   }
 
   const chunk = file;
+  // const createchunk = api.file.createChunk.mutate
 
   const bufferPromise: Promise<ArrayBuffer | undefined> = new Promise<ArrayBuffer | undefined>((resolve) => {
     
