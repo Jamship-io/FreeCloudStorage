@@ -1,12 +1,23 @@
 import THELOOP from "actions/THELOOP";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaFile } from "react-icons/fa";
 
 export default function UploadModal({ setIsUploadClicked }: { setIsUploadClicked: Dispatch<SetStateAction<boolean>> }) {
+  const [userId, setUserId] = useState<string | undefined>("")
   const session = useSession()
-  const userId = session.data?.user.id
+  // const userId = session.data?.user.id
+
+  useEffect(()=>{
+    if(session){
+      setUserId(session.data?.user.id)
+      console.log(session.data?.user.id)
+    }
+    else{
+      console.log("session undefined")
+    }
+  }, [session])
 
   console.log("user id is ", userId)
 
