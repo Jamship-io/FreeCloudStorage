@@ -38,12 +38,12 @@ export default function HomeComponent({ files }: {
     // }
 
     return (
-        <div className='flex w-full min-h-screen justify-center'>
-            <nav className='fixed flex justify-between items-center px-10 py-4 w-full bg-[#1D1C26] font-yoshida'>
-                Steal Storage
+        <div className='flex w-full min-h-screen justify-center overflow-hidden overflow-y-hidden'>
+            <nav className='fixed flex justify-between items-center px-10 py-4 w-full bg-[#1D1C26] font-yoshida text-4xl text-[#B5ADFF]'>
+                STEAL STORAGE
                 <UploadModal setIsUploadClicked={setIsUploadClicked}></UploadModal>
             </nav>
-            <div className='w-[60%] flex flex-col bg-[#1D1C26] self-start mt-28 h-screen'>
+            <div className='w-[60%] flex flex-col bg-[#1D1C26] self-start mt-28 h-screen overflow-y-hidden'>
                 <div className="flex items-center justify-between p-2 text-xl">
 
                     <div className="w-72 flex items-center justify-center">
@@ -52,24 +52,23 @@ export default function HomeComponent({ files }: {
 
                     <div className="w-36 flex items-center justify-center">
                         <h1 className="mx-2">Date Created</h1>
-
                     </div>
 
                     <div className="w-36 flex items-center justify-center">
                         <h1 className="mx-2">Size</h1>
-
                     </div>
-
                 </div>
-                {files?.map((file, index) => (
-                    <FileCollapse
-                        key={index}
-                        filename={file.file_name}
-                        size={file.file_size}
-                        date={dateFormatter(file.date)}
-                    // onClick={handleClick(file.id)}
-                    ></FileCollapse>
-                ))}
+                <div className="file-container overflow-y-scroll">
+                    {files?.map((file, index) => (
+                        <FileCollapse
+                            key={index}
+                            filename={file.file_name}
+                            size={file.file_size}
+                            date={dateFormatter(file.date)}
+                        // onClick={handleClick(file.id)}
+                        ></FileCollapse>
+                    ))}
+                </div>
             </div>
         </div>
     );

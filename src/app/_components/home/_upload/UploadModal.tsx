@@ -49,7 +49,7 @@ export default function UploadModal({ setIsUploadClicked }: { setIsUploadClicked
   return (
     <div>
       <button
-        className="btn"
+        className="btn bg-[#B5ADFF] rounded-md text-[#2C2A3C] hover:text-white hover:bg-[#1D1C26]"
         onClick={() => {
           const modal = document.getElementById('my_modal_4') as HTMLDialogElement | null;
 
@@ -59,22 +59,26 @@ export default function UploadModal({ setIsUploadClicked }: { setIsUploadClicked
           modal?.showModal()
         }}
       >
-        Upload
+        <h1 className="text-2xl">UPLOAD</h1>
       </button>
       <dialog id="my_modal_4" className="modal">
         <div className="modal-box bg-[#2C2A3C] max-w-4xl rounded-sm flex flex-col h-[50%] m-0 p-0">
 
           <div className="modal-action m-1 self-start">
-            <form method="dialog">
-              <button className="btn" onClick={() => { handleCloseModal }}>Close</button>
+            <form method="dialog" className="p-5">
+              <button className="btn rounded-md" onClick={() => { handleCloseModal }}>
+                <h1 className="text-2xl">
+                CLOSE
+                </h1>
+                </button>
             </form>
           </div>
 
           <div className="flex w-full h-full justify-center items-center">
 
             {!clicked || !file ? (
-              <div className="w-full flex flex-col items-center mx-2">
-                <h3 className="font-bold center">Upload files for free :D</h3>
+              <div className="w-full h-full flex flex-col items-center mx-2">
+                {/* <h3 className="font-bold center">Upload files for free :D</h3> */}
                 <FileInput setFile={setFile}></FileInput>
                 <button className="btn btn-primary rounded-sm w-full" onClick={handleUpload}>
                   UPLOAD
@@ -126,16 +130,17 @@ function FileInput({ setFile }: FileInputProps) {
   }
 
   return (
-    <label className="form-control w-full">
+    <label className="form-control w-[60%] min-h-full bg-white">
       <div className="label">
-        <span className="label-text">Pick a file</span>
+        {/* <span className="label-text">Pick a file</span> */}
       </div>
       <input
         type="file"
         onChange={async(e) => {
           await handleChange(e);
         }}
-        className="rounded-sm file-input file-input-bordered w-full bg-[#1D1C26] my-1"
+        className="hidden rounded-sm file-input file-input-bordered w-full bg-[#1D1C26] my-1 h-full"
+        
       />
     </label>
   );

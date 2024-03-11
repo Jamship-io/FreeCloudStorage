@@ -9,42 +9,62 @@ type FileCollapse = {
 
 export function FileCollapse({ filename, size, date }: FileCollapse) {
   return (
-    <div className='flex items-center justify-center w-full overflow-x-hidden p-0 m-0'>
-      <div tabIndex={1} className="collapse p-0 rounded-none border border-[#1E1E1E] m-0 bg-[#2C2A3C]">
-        <div className="collapse-title text-md p-0 rounded-none m-0 flex items-center justify-between">
 
-          <div className="w-72">
-            <h1 className='mx-2 truncate '>{filename}</h1>
-          </div>
+    <div className="collapse bg-base-200 collapse-arrow">
+      <input type="checkbox" />
+      {/* <div className="collapse-title text-xl font-medium"> */}
+      <div className="collapse-title text-md p-0 rounded-none flex items-center justify-between overflow-y-hidden">
 
-          <div className="w-36 flex items-center justify-center">
-            <h1 className="mx-2">{date}</h1>
+        <div className="w-72">
+          <h1 className='mx-2 truncate '>{filename}</h1>
+        </div>
 
-          </div>
-
-          <div className="w-36 flex items-center justify-center">
-            <h1 className="mx-2">{(size / (1024 * 1024)).toFixed(2)} MB</h1>
-
-          </div>
+        <div className="w-36 flex items-center justify-center">
+          <h1 className="mx-2">{date}</h1>
 
         </div>
-        <div className="collapse-content overflow-x-hidden">
-          {/* <p>tabIndex={0} attribute is necessary to make the div focusable</p> */}
-          <button className="btn btn-primary">Download</button>
-          <div className="modal-box bg-[#2C2A3C] max-w-4xl rounded-sm flex flex-col h-[50%] m-0 p-0">
 
-            <div className="modal-action m-1 self-start">
-              <form method="dialog">
-                <button className="btn">Close</button>
-              </form>
-            </div>
+        <div className="w-36 flex items-center justify-center">
+          <h1 className="mx-2">{(size / (1024 * 1024)).toFixed(2)} MB</h1>
 
-          </div>
         </div>
+
+      </div>
+
+      <div className="collapse-content">
+        <h1>Hello World</h1>
       </div>
     </div>
+
+    // <div className='flex items-center justify-center w-full overflow-x-hidden p-0 m-0 overflow-y-hidden'>
+    //   <div tabIndex={1} className="collapse p-0 rounded-none border border-[#1E1E1E] m-0 bg-[#2C2A3C] overflow-y-hidden">
+    // <div className="collapse-title text-md p-0 rounded-none m-0 flex items-center justify-between m-2 overflow-y-hidden">
+
+    //   <div className="w-72">
+    //     <h1 className='mx-2 truncate '>{filename}</h1>
+    //   </div>
+
+    //   <div className="w-36 flex items-center justify-center">
+    //     <h1 className="mx-2">{date}</h1>
+
+    //   </div>
+
+    //   <div className="w-36 flex items-center justify-center">
+    //     <h1 className="mx-2">{(size / (1024 * 1024)).toFixed(2)} MB</h1>
+
+    //   </div>
+
+    // </div>
+    //     <div className="collapse-content overflow-x-hidden">
+    //       <p>tabIndex={0} attribute is necessary to make the div focusable</p>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
+
+
+
 
 
 
